@@ -7,6 +7,7 @@ import React from "react";
 import { AiOutlineMail } from "react-icons/ai";
 import { useState, useEffect } from "react";
 import axios from "axios";
+import moment from "moment";
 
 function UserInput() {
   const [checkIn, setCheckIn] = useState("");
@@ -19,32 +20,7 @@ function UserInput() {
   const navigate = useNavigate();
   const currentDate = new Date();
 
-  //get user's msgs after verification
-  useEffect(() => {
-    if (localStorage.getItem("token")) {
-      axios
-        .post("http://localhost:8000/user/verify", {
-          token: localStorage.getItem("token"),
-        })
-        .then(({ data }) => {
-          if (data._id) {
-            setUser(data);
-            console.log(data._id);
-            axios
-              .get("http://localhost:8000/user/getReply/" + data._id)
-              .then(({ data }) => {
-                console.log(data);
-                setReplyList(data);
-              });
-          } else {
-            navigate("/"); //go to login
-          }
-          console.log(data);
-        });
-    } else {
-      navigate("/"); // go to login
-    }
-  }, []);
+
 
   function handleSubmit(e) {
     e.preventDefault();
@@ -68,11 +44,11 @@ function UserInput() {
 
     // Axios Post function
     axios
-      .post("http://localhost:8000/user/inquiry", formData)
+      .post("http://localhost:5000/user/inquiry", formData)
       .then((res) => {
         console.log(res);
         alert("Your message has been submitted successfully!");
-        // toast.success("Your message has been submitted successfully!");
+    
         setInquiry("");
       })
       .catch((error) => {
@@ -80,22 +56,10 @@ function UserInput() {
       });
   }
 
-  function signOut() {
-    localStorage.removeItem("token");
-    navigate("/");
-  }
+
   return (
-    <div>
-      <div className="signout-header">
-        <button
-          className="signout"
-          onClick={() => {
-            signOut();
-          }}
-        >
-          Sign Out
-        </button>
-      </div>
+    <div >
+    
 
       <div className="App">
         <h2>Welcome to Customer Hub Service</h2>
@@ -112,7 +76,9 @@ function UserInput() {
                 id="checkIn"
                 selected={checkIn}
                 onChange={(date) => setCheckIn(date)}
-                dateFormat="dd/MM/yyyy" //didn't work
+                dateFormat="dd/MM/yyyy" 
+             
+                //didn't work
                 placeholderText="Select a date"
               />
             </div>
@@ -124,6 +90,7 @@ function UserInput() {
                 selected={checkOut}
                 onChange={(date) => setCheckOut(date)}
                 dateFormat="dd/MM/yyyy"
+            
                 placeholderText="Select a date"
               />
             </div>
@@ -170,6 +137,14 @@ function UserInput() {
           );
         })}
       </ul>
+ 
+
+
+
+
+
+
+
     </div>
   );
 }
