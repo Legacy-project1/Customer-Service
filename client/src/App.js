@@ -1,23 +1,49 @@
-import React from "react";
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import Login from "./Components/Login";
-import Signup from "./Components/Signup";
-import AdminLogin from "./Components/AdminLogin";
-import AdminPage from "./Components/AdminPage";
-import Userinput from "./Components/UserInput";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import Home from "./pages/Home";
+import Login from "./pages/Login";
+import Register from "./pages/Register";
+import ProtectedPage from "./components/ProtectedPage";
+import Spinner from "./components/Spinner";
+import { useSelector } from "react-redux";
+import Profile from "./pages/profile";
+import Admin from "./pages/Admin";
 
 function App() {
+  const { loading } = useSelector((state) => state.loaders);
   return (
-    <div className="App">
-      <Router>
+    <div>
+      {loading && <Spinner />}
+      <BrowserRouter>
         <Routes>
-          <Route path="/" element={<Login />} />
-          <Route path="/signup" element={<Signup />} />
-          <Route path="/adminlogin" element={<AdminLogin />} />
-          <Route path="/adminpage" element={<AdminPage />} />
-          <Route path="/userinput" element={<Userinput />} />
+          <Route
+            path="/"
+            element={
+              <ProtectedPage>
+                <Home />
+              </ProtectedPage>
+            }
+          />
+         
+          <Route
+            path="/profile"
+            element={
+              <ProtectedPage  >
+                <Profile  />
+              </ProtectedPage>
+            }
+          />
+           <Route
+            path="/admin"
+            element={
+              <ProtectedPage>
+                <Admin />
+              </ProtectedPage>
+            }
+          />
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
         </Routes>
-      </Router>
+      </BrowserRouter>
     </div>
   );
 }
