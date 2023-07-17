@@ -1,21 +1,25 @@
-const express = require("express");
-const app = express();
-const userRouter = require("./routers/userRouter");
-const adminRouter = require("./routers/adminRouter");
-const inquiryRouter = require("./routers/inquiryRouter");
-const replyRouter = require("./routers/replyRouter");
-const cors = require("cors");
-require("./modules/connection");
+const inquiryRouter = require("./routes/inquiryRouter");
 
+const express = require("express");
+
+const app = express();
 app.use(express.json());
 
-app.use(cors({ origin: "*" }));
+require("dotenv").config();
+const dbConfig = require("./config/dbConfig");
 
-app.use("/", userRouter);
-app.use("/", adminRouter);
-app.use("/", replyRouter);
+const cors = require("cors");
+app.use(
+  cors({
+    origin: "http://localhost:3000",
+  })
+);
+const port = process.env.PORT || 5000;
+
+const userRoute = require("./routes/usersRoute");
+
+app.use("/api/users", userRoute);
+
 app.use("/", inquiryRouter);
 
-app.listen(8000, () => {
-  console.log("Server is running on 8000....");
-});
+app.listen(port, () => console.log(`Node/Express Started on port ${port}`));
